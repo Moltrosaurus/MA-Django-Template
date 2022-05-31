@@ -4,7 +4,6 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 import os, environ
-from   unipath import Path
 
 env = environ.Env(
     # set casting, default value
@@ -12,7 +11,7 @@ env = environ.Env(
 )
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = Path(__file__).parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Take environment variables from .env file
@@ -24,9 +23,12 @@ SECRET_KEY = env('SECRET_KEY', default='S#perS3crEt_007')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
+# Assets Management
+ASSETS_ROOT = os.getenv('ASSETS_ROOT', '/static/assets')
+
 # load production server from .env
-ALLOWED_HOSTS        = ['localhost', 'localhost:85', '127.0.0.1',               os.getenv('SERVER', '127.0.0.1') ]
-CSRF_TRUSTED_ORIGINS = ['http://localhost:85', 'http://127.0.0.1', 'https://' + os.getenv('SERVER', '127.0.0.1') ]
+ALLOWED_HOSTS        = ['localhost', 'localhost:85', '127.0.0.1',               env('SERVER', '127.0.0.1') ]
+CSRF_TRUSTED_ORIGINS = ['http://localhost:85', 'http://127.0.0.1', 'https://' + env('SERVER', '127.0.0.1') ]
 
 # Application definition
 
@@ -37,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.home'  # Enable the inner home (home)
+    'apps.home',   # Enable the inner home (home)
+    'apps.quality',  #new App für Qualitätsvorhersage
 ]
 
 MIDDLEWARE = [
@@ -67,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'apps.context_processorts.cfg_assets_root',
             ],
         },
     },
@@ -77,8 +81,21 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
+# IF Schleife neu aus Versions Update v1.0.5
+if os.environ.get('DB_ENGINE') and os.environ.get('DB_ENGINE') == "mysql":
+    DATABASES = {
+      'default': {
+        'ENGINE'  : 'django.db.backends.mysql',
+        'NAME'    : os.getenv('DB_NAME'     , 'appseed_db'),
+        'USER'    : os.getenv('DB_USERNAME' , 'appseed_db_usr'),
+        'PASSWORD': os.getenv('DB_PASS'     , 'pass'),
+        'HOST'    : os.getenv('DB_HOST'     , 'localhost'),
+        'PORT'    : os.getenv('DB_PORT'     , 3306),
+        },
+    }
+else:
+    DATABASES = {
+     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'db.sqlite3',
     }
