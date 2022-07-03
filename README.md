@@ -120,7 +120,7 @@ The project is coded using a simple and intuitive structure presented below:
    |    |    |-- views.py                  # Serve HTML pages for authenticated users
    |    |    |-- urls.py                   # Define some super simple routes  
    |    |
-   |    |-- quality/                          # App für Qualitätsvorhersage
+   |    |-- qualityend/                          # App für Qualitätsvorhersage
    |    |    |-- views.py                  # Serve HTML pages for authenticated users
    |    |    |-- urls.py                   # Define some routes  
    |    |

@@ -3,7 +3,7 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-import os, environ
+import os.path, environ
 
 env = environ.Env(
     # set casting, default value
@@ -26,9 +26,9 @@ DEBUG = env('DEBUG')
 # Assets Management
 ASSETS_ROOT = os.getenv('ASSETS_ROOT', '/static/assets')
 
-# load production server from .env
-ALLOWED_HOSTS        = ['localhost', 'localhost:85', '127.0.0.1',               env('SERVER', '127.0.0.1') ]
-CSRF_TRUSTED_ORIGINS = ['http://localhost:85', 'http://127.0.0.1', 'https://' + env('SERVER', '127.0.0.1') ]
+# load production server from .env ##os.getenv stat nur env, gibt n Haufen Fehlermelgungen sonst ; "TypeError: 'str' object is not callable
+ALLOWED_HOSTS        = ['localhost', 'localhost:85', '127.0.0.1',               os.getenv('SERVER', '127.0.0.1') ]
+CSRF_TRUSTED_ORIGINS = ['http://localhost:85', 'http://127.0.0.1', 'https://' + os.getenv('SERVER', '127.0.0.1') ]
 
 # Application definition
 
@@ -39,8 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',  # For REST API
     'apps.home',   # Enable the inner home (home)
-    'apps.quality',  #new App für Qualitätsvorhersage
+    'apps.qualityend',  #new App für Qualitätsvorhersage
 ]
 
 MIDDLEWARE = [
